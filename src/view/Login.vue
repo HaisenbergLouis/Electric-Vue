@@ -2,7 +2,6 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import Navbar from '@/components/Navbar.vue';
 
 const router = useRouter();
 
@@ -37,7 +36,7 @@ const handleLogin = () => {
         <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="width: 100%" @click="handleLogin">登 录</el-button>
+        <el-button type="primary" color="#e4393c" style="width: 100%" @click="handleLogin">登 录</el-button>
       </el-form-item>
     </el-form>
     <div class="tip">
@@ -51,9 +50,9 @@ const handleLogin = () => {
 .auth-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 70px);
-  padding: 60px 0;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0;
   background: #f5f5f5;
 }
 .auth-box {

@@ -45,7 +45,7 @@ const handleRegister = () => {
         <el-input v-model="form.confirmPassword" type="password" placeholder="请再次输入密码" show-password />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="width: 100%" @click="handleRegister">注 册</el-button>
+        <el-button type="primary" color="#e4393c" style="width: 100%" @click="handleRegister">注 册</el-button>
       </el-form-item>
     </el-form>
     <div class="tip">
@@ -59,9 +59,9 @@ const handleRegister = () => {
 .auth-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 70px);
-  padding: 60px 0;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0;
   background: #f5f5f5;
 }
 .auth-box {
