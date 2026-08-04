@@ -2,9 +2,10 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import Navbar from '@/components/Navbar.vue';
+import { useUserStore } from '@/store/user';
 
 const router = useRouter();
+const userStore = useUserStore()
 
 // 注册表单
 const form = reactive({
@@ -14,7 +15,7 @@ const form = reactive({
 });
 
 // 注册
-const handleRegister = () => {
+const handleRegister = async() => {
   if (!form.username || !form.password || !form.confirmPassword) {
     ElMessage.warning('请填写完整信息');
     return;
@@ -23,9 +24,16 @@ const handleRegister = () => {
     ElMessage.warning('两次输入的密码不一致');
     return;
   }
-  // TODO: 对接真实注册接口
-  ElMessage.success('注册成功，请登录');
-  router.push('/login');
+  try{
+    await userStore.register(form.username,form.password)
+    ElMessage.warning('两次输入的密码不一致')
+    ElMessage.success('注册成功，请登录');
+    router.push('/login');  
+    }catch(error){
+      ElMessage.error((error as Error).message)
+  }
+  
+  
 };
 </script>
 

@@ -2,8 +2,11 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { useUserStore } from '@/store/user';
+
 
 const router = useRouter();
+const userStore = useUserStore()
 
 // 登录表单
 const form = reactive({
@@ -12,14 +15,19 @@ const form = reactive({
 });
 
 // 登录
-const handleLogin = () => {
+const handleLogin = async() => {
   if (!form.username || !form.password) {
     ElMessage.warning('请输入用户名和密码');
     return;
   }
-  // TODO: 对接真实登录接口
-  ElMessage.success('登录成功');
-  router.push('/');
+  try{
+    await userStore.login(form.username,form.password)
+    ElMessage.success('登录成功');
+    router.push('/');
+  }catch(error){
+    ElMessage.error((error as Error).message)
+  }
+  
 };
 </script>
 

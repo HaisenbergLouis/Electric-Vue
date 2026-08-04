@@ -40,15 +40,15 @@
         <RouterLink to="/cart" class="cart-btn">
           <el-icon><ShoppingCart /></el-icon>
           <span>购物车</span>
-          <el-badge :value="cartCount" class="badge" />
+          <el-badge :value="cartStore.totalCount" class="badge" />
         </RouterLink>
 
         <!-- 已登录：下拉菜单 -->
-        <div v-if="isLogin" class="user-dropdown">
+        <div v-if="userStore.isLogin" class="user-dropdown">
           <el-dropdown trigger="click">
             <span class="user-text">
               <el-icon><User /></el-icon>
-              {{ userInfo.username }}
+              {{ userStore.userInfo?.username }}
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -58,7 +58,7 @@
                 <el-dropdown-item>
                   <RouterLink to="/member/order">我的订单</RouterLink>
                 </el-dropdown-item>
-                <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
+                <el-dropdown-item divided @click="userStore.logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -76,13 +76,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ShoppingCart, User } from '@element-plus/icons-vue'
+import { useUserStore } from '@/store/user'
+import { useCartStore } from '@/store/cart'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
+const cartStore = useCartStore()
 
 // 导航类型定义
 interface NavItem {
@@ -90,10 +94,7 @@ interface NavItem {
   path: string
 }
 
-// 用户信息类型
-interface UserInfo {
-  username: string
-}
+
 
 // 导航菜单
 const navList = ref<NavItem[]>([
@@ -106,14 +107,7 @@ const navList = ref<NavItem[]>([
 
 // 搜索关键词
 const searchKey = ref<string>('')
-// 购物车数量（后续迁移Pinia）
-const cartCount = ref<number>(0)
-// 登录状态
-const isLogin = ref<boolean>(false)
-// 用户信息
-const userInfo = reactive<UserInfo>({
-  username: ''
-})
+
 
 // 搜索
 const handleSearch = () => {
@@ -125,13 +119,7 @@ const handleSearch = () => {
   router.push({ path: '/search', query: { keyword } })
 }
 
-// 退出登录
-const handleLogout = () => {
-  isLogin.value = false
-  userInfo.username = ''
-  ElMessage.success('退出成功')
-  router.push('/')
-}
+
 </script>
 
 <style scoped lang="scss">
