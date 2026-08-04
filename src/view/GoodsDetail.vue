@@ -15,7 +15,9 @@
         <div class="price">
           <span class="symbol">¥</span>
           <span class="num">{{ goodsInfo.price }}</span>
+          <span class="original-price">￥{{ goodsInfo.originalPrice }}</span>
         </div>
+        <div class="sales">已售{{ goodsInfo.sales }}</div>
         <div class="desc">{{ goodsInfo.desc }}</div>
 
         <div class="num-select">
@@ -41,20 +43,14 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useCartStore } from '@/store/cart'
+import { getGoodsDetail as getGoodsDetailApi } from '@/api'
+import type{ GoodsItem } from '@/api'
 const cartStore = useCartStore()
 
 const route = useRoute()
 const router = useRouter()
 
-// 商品详情 TS类型
-interface GoodsItem {
-  id: string
-  name: string
-  price: number
-  pic: string
-  desc: string
-  stock: number
-}
+
 
 // 商品数据
 // 注意：stock 初始给 1，不能是 0！
@@ -63,25 +59,23 @@ const goodsInfo = ref<GoodsItem>({
   id: '',
   name: '',
   price: 0,
+  originalPrice: 0,
   pic: '',
   desc: '',
-  stock: 1
+  detail: '',
+  stock: 1, // 保持 1，避免 el-input-number min>max 崩溃
+  sales: 0
 })
 // 购买数量
 const buyNum = ref(1)
 
 // 获取商品详情函数
 const getGoodsDetail = async (id: string) => {
-  console.log('请求商品id：', id)
-  // ========== 这里后续替换成后端接口 ==========
-  // 模拟接口数据
-  goodsInfo.value = {
-    id,
-    name: '高性能无线蓝牙耳机 降噪长续航',
-    price: 199,
-    pic: 'https://img14.360buyimg.com/n1/jfs/t1/208243/20/25677/36789/647ad553F2d249370/8924479797424444.jpg',
-    desc: "主动降噪，蓝牙5.3，续航30小时，高清通话",
-    stock: 99
+  const res = await getGoodsDetailApi(id)
+  if(res.code === 0 && res.data){
+    goodsInfo.value = res.data
+  }else{
+    ElMessage.error(res.message)
   }
 }
 
@@ -139,6 +133,17 @@ watch(
       font-size: 18px;
     }
   }
+  .original-price {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+}
+.sales {
+  margin: 12px 0;
+  font-size: 13px;
+  color: #999;
+}
   .desc {
     margin: 16px 0;
     color: #666;
