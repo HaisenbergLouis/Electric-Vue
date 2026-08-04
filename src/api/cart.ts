@@ -1,4 +1,4 @@
-import type { ApiResponse, CartResult, CartItem } from "./type";
+import type { ApiResponse, CartResult } from "./type";
 import { cartDB } from "./mock/cart";
 import { goodsDB } from "./mock/goods";
 

@@ -6,7 +6,6 @@ import type {
 } from "./type";
 
 import { goodsDB, newGoodsIds, discountGoodsDB } from "./mock/goods";
-import type { G } from "vue-router/dist/router-CWoNjPRp.mjs";
 // 模拟网络延迟
 const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
