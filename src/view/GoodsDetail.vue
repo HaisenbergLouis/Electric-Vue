@@ -40,6 +40,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useCartStore } from '@/store/cart'
+const cartStore = useCartStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -55,13 +57,15 @@ interface GoodsItem {
 }
 
 // 商品数据
+// 注意：stock 初始给 1，不能是 0！
+// 因为 el-input-number 的 min(1) > max(0) 会抛错导致页面渲染崩溃
 const goodsInfo = ref<GoodsItem>({
   id: '',
   name: '',
   price: 0,
   pic: '',
   desc: '',
-  stock: 0
+  stock: 1
 })
 // 购买数量
 const buyNum = ref(1)
@@ -82,9 +86,13 @@ const getGoodsDetail = async (id: string) => {
 }
 
 // 加入购物车
-const addCart = () => {
-  ElMessage.success(`成功加入购物车 x${buyNum.value}`)
-  // 后续接入pinia，保存购物车
+const addCart = async() => {
+    try{
+        await cartStore.addToCart(goodsInfo.value.id,buyNum.value)
+        ElMessage.success(`成功加入购物车 x${buyNum.value}`)
+    }catch(error){
+        ElMessage.error((error as Error).message)
+    }
 }
 
 // 页面加载执行
