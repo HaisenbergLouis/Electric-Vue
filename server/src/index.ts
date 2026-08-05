@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { testConnection } from "./db";
 import goodsRouter from "./routes/goods";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/goods", goodsRouter);
+app.use("/api/auth", authRouter);
 
 app.get("/api/hello", (req, res) => {
   res.json({ code: 0, message: "ok", data: "后端跑通了" });
