@@ -19,7 +19,7 @@ onMounted(async()=>{
 <div class="container">
     <h2>新品上市</h2>
     <div class="goods-list">
-      <GoodsCard :item="item" v-for="item in goodsList" :key="item.id" show-sales/>
+      <GoodsCard v-for="item in goodsList" :item="item" :key="item.id" :show-sales="true" />
     </div>
     
   </div>
